@@ -5,14 +5,13 @@ import { Recipe } from "./Recipe";
 export class Category {
 
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @Column({unique: true})
-    name: string;
+    name!: string;
 
     @OneToMany(type => Recipe, recipes => recipes.category)
-    recipes: Recipe[];
+    recipes!: Recipe[];
 
 
 }
-

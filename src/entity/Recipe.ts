@@ -1,27 +1,27 @@
 import {Entity, PrimaryGeneratedColumn, PrimaryColumn, Column, ManyToMany, JoinTable, ManyToOne} from "typeorm";
-import { User } from "./User";
-import { Category } from "./Category";
+import { User } from './User';
+import { Category } from './Category';
 
 
 @Entity()
 export class Recipe {
 
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @PrimaryColumn()
-    name: string;
+    name!: string;
 
     @PrimaryColumn()
-    description: string;
+    description!: string;
 
     @Column()
-    ingredients: string;
+    ingredients!: string;
 
     @ManyToOne(type => Category, category => category.recipes)
-    category: Category;
+    category!: Category;
 
     @ManyToMany(type => User, user => user.recipes)
     @JoinTable()
-    users: User[];
+    users!: User[];
 }
