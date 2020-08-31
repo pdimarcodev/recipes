@@ -3,9 +3,8 @@ import { hash, compare } from 'bcryptjs';
 
 import { User } from '../entity/User';
 import { MyContext } from '../MyContext';
-import { createRefreshToken, createAccessToken } from '../auth';
+import { createAccessToken } from '../auth';
 import { isAuth } from '../isAuthMiddleware';
-import { sendRefreshToken } from '../sendRefreshToken';
 import { IsEmail } from 'class-validator';
 
 
@@ -81,9 +80,6 @@ export class UserResolver {
         throw new Error('Bad password.');
     }
 
-    // login successful
-    sendRefreshToken(res, createRefreshToken(user));
-
     return {
         accessToken: createAccessToken(user)
     };
@@ -106,6 +102,7 @@ export class UserResolver {
     }
 
     @Query(() => [User])
+    @UseMiddleware(isAuth)
     async getUsers() {
         return await User.find();
     }

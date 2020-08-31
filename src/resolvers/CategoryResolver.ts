@@ -1,5 +1,6 @@
-import { Resolver, Query, Mutation, Arg, InputType, Field } from "type-graphql";
+import { Resolver, Query, Mutation, Arg, InputType, Field, UseMiddleware, Int } from "type-graphql";
 import { Category } from "../entity/Category";
+import { isAuth } from "../isAuthMiddleware";
 
 
 @InputType()
@@ -8,7 +9,6 @@ class CategoryInput {
     name!: string;
 
 }
-
 
 @Resolver()
 export class CategoryResolver {
@@ -23,8 +23,30 @@ export class CategoryResolver {
         } catch (err) {
             console.log(err);  
         }
-        }
-     
+    }
 
+    @Mutation(() => Boolean)
+    async updateCategory(
+        @Arg("id", () => Int) id: number,
+        @Arg("fields", () => CategoryInput) fields: CategoryInput
+        ) {
+            await Category.update({id}, fields);
+            return true;
+    }
+
+    @Query(() => [Category])
+    @UseMiddleware(isAuth)
+    async getCategories() {
+        return await Category.find();
+    }
+     
+    @Query(() => Category)
+    @UseMiddleware(isAuth)
+    async getCategory(
+        @Arg("name", () => String) name: string
+        )
+         {
+        return await Category.findOne({where: {name}});
+    }
 
 }
