@@ -10,6 +10,8 @@ import { UserResolver } from './resolvers/userResolver';
 import { User } from "./entity/User";
 import { createAccessToken, createRefreshToken } from "./auth";
 import { sendRefreshToken } from "./sendRefreshToken";
+import { RecipeResolver } from "./resolvers/RecipeResolver";
+import { CategoryResolver } from "./resolvers/CategoryResolver";
 
 
 export async function startServer() {
@@ -45,7 +47,9 @@ export async function startServer() {
     schema: await buildSchema({
         resolvers: [
             PingResolver,
-            UserResolver
+            UserResolver,
+            RecipeResolver,
+            CategoryResolver
         ]
         }),
         context: ({req, res}) => ({req, res})

@@ -1,5 +1,5 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, BaseEntity} from "typeorm";
-import { Field, ObjectType, Int } from 'type-graphql';
+import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, BaseEntity, JoinTable} from "typeorm";
+import { Field, ObjectType} from 'type-graphql';
 
 import { Recipe } from "./Recipe";
 
@@ -24,6 +24,7 @@ export class User extends BaseEntity{
     password!: string;
 
     @ManyToMany(type => Recipe, recipes => recipes.users)
+    @JoinTable()
     recipes!: Recipe[];
 
 

@@ -1,20 +1,27 @@
-import {Entity, PrimaryGeneratedColumn, PrimaryColumn, Column, ManyToMany, JoinTable, ManyToOne} from "typeorm";
-import { User } from './User';
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, BaseEntity, ManyToMany, JoinTable} from "typeorm";
+import { ObjectType, Field } from "type-graphql";
+
 import { Category } from './Category';
+import { User } from "./User";
 
 
+@ObjectType()
 @Entity()
-export class Recipe {
+export class Recipe extends BaseEntity {
 
+    @Field()
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @PrimaryColumn()
+    @Field()
+    @Column({unique: true})
     name!: string;
 
-    @PrimaryColumn()
-    description!: string;
+    @Field()
+    @Column()
+    description?: string;
 
+    @Field()
     @Column()
     ingredients!: string;
 
@@ -22,6 +29,5 @@ export class Recipe {
     category!: Category;
 
     @ManyToMany(type => User, user => user.recipes)
-    @JoinTable()
     users!: User[];
 }

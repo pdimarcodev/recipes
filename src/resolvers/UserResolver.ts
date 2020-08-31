@@ -4,9 +4,9 @@ import { hash, compare } from 'bcryptjs';
 import { User } from '../entity/User';
 import { MyContext } from '../MyContext';
 import { createRefreshToken, createAccessToken } from '../auth';
-//import { Recipe } from '../entity/Recipe';
 import { isAuth } from '../isAuthMiddleware';
 import { sendRefreshToken } from '../sendRefreshToken';
+import { IsEmail } from 'class-validator';
 
 
 @ObjectType()
@@ -20,6 +20,7 @@ class UserInput {
     @Field()
     name!: string;
 
+    @IsEmail()
     @Field()
     email!: string;
 
@@ -44,11 +45,17 @@ export class UserResolver {
 
     @Mutation(() => User)
     async signUp(
-        @Arg("variables", () => UserInput) variables: UserInput 
+        @Arg("data", () => UserInput) data: UserInput 
     ) {
+    
     try{
-        const hashedPassword = await hash(variables.password, 12)
-        const newUser = User.create({...variables, password: hashedPassword});
+        const user = await User.findOne({ where: {email: data.email} });
+        if (user) {
+                throw new Error('User already exists.');
+        }
+    
+        const hashedPassword = await hash(data.password, 12)
+        const newUser = User.create({...data, password: hashedPassword});
         return await newUser.save();
     } catch (err) {
         console.log(err);  
@@ -100,12 +107,12 @@ export class UserResolver {
 
     @Query(() => [User])
     async getUsers() {
-        return await User.find()
+        return await User.find();
     }
 
     @Query(() => String)
     @UseMiddleware(isAuth)
-    getMyRecipes(@Ctx() {payload}: MyContext) {
+    getMyUserId(@Ctx() {payload}: MyContext) {
         return `your user id is: ${payload!.userId}`;
     }
 } 
