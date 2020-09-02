@@ -13,16 +13,14 @@ class CategoryInput {
 @Resolver()
 export class CategoryResolver {
 
-    @Mutation(() => Category)
+    @Mutation(() => Boolean)
     async createCategory(
         @Arg("data", () => CategoryInput) data: CategoryInput
     ) {
-        try{
-            const newCategory = Category.create(data);
-            return await newCategory.save();
-        } catch (err) {
-            console.log(err);  
-        }
+        
+            
+           await Category.insert(data);
+            return true;
     }
 
     @Mutation(() => Boolean)
@@ -50,3 +48,4 @@ export class CategoryResolver {
     }
 
 }
+

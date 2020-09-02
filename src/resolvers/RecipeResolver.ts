@@ -1,22 +1,21 @@
 import { Resolver, Query, Mutation, Arg, InputType, Field, FieldResolver, Root, UseMiddleware, Int } from "type-graphql";
 import { Recipe } from "../entity/Recipe";
-import { Category } from "../entity/Category";
 import { isAuth } from "../isAuthMiddleware";
 
 
 @InputType()
-class RecipeInput {
+class RecipeInput  {
     @Field()
     name!: string;
 
     @Field()
-    description?: string;
+    description!: string;
 
     @Field()
     ingredients!: string;
 
-    @Field()
-    categoryId!: number;
+    @Field(() => Int)
+    category!: () => string;
 
 }
 
@@ -32,7 +31,7 @@ class RecipeUpdateInput {
     ingredients?: string;
 
     @Field(() => Int, {nullable: true})
-    categoryId?: number;
+    category?: () => string;
 }
 
 
@@ -43,18 +42,10 @@ export class RecipeResolver {
     async createRecipe(
         @Arg("data", () => RecipeInput) data: RecipeInput
     ) {
-         try{
-            const category = await Category.findOne({where: {id: data.categoryId}})
-
-            if (!category) {
-                throw new Error("Category not found");
-            }
-
-            const newRecipe = Recipe.create(data);
-            return await newRecipe.save();
-        } catch (err) {
-            console.log(err);  
-        }
+          
+            await Recipe.insert(data);
+            return data;
+        
     }
 
     @Mutation(() => Boolean)

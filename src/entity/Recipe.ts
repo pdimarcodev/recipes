@@ -25,6 +25,7 @@ export class Recipe extends BaseEntity {
     @Column()
     ingredients!: string;
 
+
     @ManyToOne(type => Category, category => category.recipes)
     @JoinColumn()
     category!: Category;
