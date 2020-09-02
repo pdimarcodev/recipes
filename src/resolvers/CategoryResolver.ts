@@ -6,21 +6,19 @@ import { isAuth } from "../isAuthMiddleware";
 @InputType()
 class CategoryInput {
     @Field()
-    name!: string;
+    name: string;
 
 }
 
 @Resolver()
 export class CategoryResolver {
 
-    @Mutation(() => Boolean)
+    @Mutation(() => Category)
     async createCategory(
         @Arg("data", () => CategoryInput) data: CategoryInput
     ) {
-        
-            
            await Category.insert(data);
-            return true;
+            return data;
     }
 
     @Mutation(() => Boolean)
@@ -32,14 +30,14 @@ export class CategoryResolver {
             return true;
     }
 
-    @Query(() => [Category])
-    @UseMiddleware(isAuth)
+    @Query(() => [Category], {nullable: true})
+    //@UseMiddleware(isAuth)
     async getCategories() {
         return await Category.find();
     }
      
-    @Query(() => Category)
-    @UseMiddleware(isAuth)
+    @Query(() => Category, {nullable: true})
+    //@UseMiddleware(isAuth)
     async getCategory(
         @Arg("name", () => String) name: string
         )

@@ -1,21 +1,22 @@
 import { Resolver, Query, Mutation, Arg, InputType, Field, FieldResolver, Root, UseMiddleware, Int } from "type-graphql";
 import { Recipe } from "../entity/Recipe";
 import { isAuth } from "../isAuthMiddleware";
+import { Category } from "../entity/Category";
 
 
 @InputType()
 class RecipeInput  {
     @Field()
-    name!: string;
+    name: string;
 
     @Field()
-    description!: string;
+    description: string;
 
     @Field()
-    ingredients!: string;
+    ingredients: string;
 
     @Field(() => Int)
-    category!: () => string;
+    category: () => string;
 
 }
 
@@ -35,7 +36,7 @@ class RecipeUpdateInput {
 }
 
 
-@Resolver()
+@Resolver(of => Recipe)
 export class RecipeResolver {
 
     @Mutation(() => Recipe)
@@ -58,15 +59,15 @@ export class RecipeResolver {
             
     }
 
-    @Query(() => [Recipe])
-    @UseMiddleware(isAuth)
+    @Query(() => [Recipe], {nullable: true})
+    //@UseMiddleware(isAuth)
     async getRecipes() {
         return await Recipe.find();
     }
 
 
-    @Query(() => Recipe)
-    @UseMiddleware(isAuth)
+    @Query(() => Recipe, {nullable: true})
+    //@UseMiddleware(isAuth)
     async getRecipe(
         @Arg("name", () => String) name: string
         )
@@ -74,12 +75,10 @@ export class RecipeResolver {
         return await Recipe.findOne({where: {name}});
     }
 
-     
-    // @FieldResolver()
-    // async categoryId(@Root() recipe: Recipe) {
-    // const category = await this.catRepository.findOne({where: {id: this.categoryId}});
-    // if (!category) throw new Error('Category not found.');
-    // return category;
-//   }
+    @FieldResolver(() => Category)
+    async category(@Root() recipe: Recipe) {
+    return await Category.findOne(recipe.category);
+  
+  }
 
 }

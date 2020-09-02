@@ -17,14 +17,14 @@ class LoginResponse {
 @InputType()
 class UserInput {
     @Field()
-    name!: string;
+    name: string;
 
     @IsEmail()
     @Field()
-    email!: string;
+    email: string;
 
     @Field()
-    password!: string;
+    password: string;
 }
 
 @InputType()

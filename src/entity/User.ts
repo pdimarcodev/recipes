@@ -1,5 +1,5 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, BaseEntity, JoinTable} from "typeorm";
-import { Field, ObjectType} from 'type-graphql';
+import { Field, ObjectType, Int} from 'type-graphql';
 
 import { Recipe } from "./Recipe";
 
@@ -7,25 +7,25 @@ import { Recipe } from "./Recipe";
 @Entity()
 export class User extends BaseEntity{
 
-    @Field()
+    @Field(() => Int)
     @PrimaryGeneratedColumn()
-    id!: number;
+    id: number;
 
     @Field(() => String)
     @Column()
-    name!: string;
+    name: string;
 
     @Field(() => String)
     @Column({unique: true}) 
-    email!: string;
+    email: string;
 
     @Field(() => String)
     @Column()
-    password!: string;
+    password: string;
 
     @ManyToMany(type => Recipe, recipes => recipes.users)
     @JoinTable()
-    recipes!: Recipe[];
+    recipes: Recipe[];
 
 
 }
