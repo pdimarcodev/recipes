@@ -23,7 +23,7 @@ export class User extends BaseEntity{
     @Column()
     password: string;
 
-    @ManyToMany(type => Recipe, recipes => recipes.users)
+    @ManyToMany(type => Recipe, recipes => recipes.users, {eager: true})
     @JoinTable()
     recipes: Recipe[];
 

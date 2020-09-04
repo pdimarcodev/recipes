@@ -4,6 +4,7 @@ import { isAuth } from "../isAuthMiddleware";
 import { Category } from "../entity/Category";
 
 
+
 @InputType()
 class RecipeInput  {
     @Field()
@@ -39,6 +40,7 @@ class RecipeUpdateInput {
 @Resolver(of => Recipe)
 export class RecipeResolver {
 
+    //OK
     @Mutation(() => Recipe)
     async createRecipe(
         @Arg("data", () => RecipeInput) data: RecipeInput
@@ -49,6 +51,7 @@ export class RecipeResolver {
         
     }
 
+    // OK
     @Mutation(() => Boolean)
     async updateRecipe(
         @Arg("id", () => Int) id: number,
@@ -59,26 +62,38 @@ export class RecipeResolver {
             
     }
 
+    // OK ** falta poder buscar por nombre de categoria, solo pasa id **
     @Query(() => [Recipe], {nullable: true})
     //@UseMiddleware(isAuth)
-    async getRecipes() {
-        return await Recipe.find();
-    }
-
-
-    @Query(() => Recipe, {nullable: true})
-    //@UseMiddleware(isAuth)
-    async getRecipe(
-        @Arg("name", () => String) name: string
+    async getRecipes(
+        @Arg("fields", () => RecipeUpdateInput) fields: RecipeUpdateInput
         )
          {
-        return await Recipe.findOne({where: {name}});
-    }
+            const qb = Recipe.createQueryBuilder('recipe')
+          
+            Object.entries(fields).map(([key, value]) => {     
+
+            if (key === 'category' ) {
+                qb.andWhere('recipe.category = :category', { category: fields.category})
+                
+            } else {
+            
+            qb.andWhere(key + ' like :' + key, {
+                [`${key}`] : '%' + `${value}` + '%'});
+            }});
+        
+        const result = await qb.getMany();
+        return result;
+    };
+
+
+
+   
 
     @FieldResolver(() => Category)
     async category(@Root() recipe: Recipe) {
     return await Category.findOne(recipe.category);
   
   }
-
+         
 }

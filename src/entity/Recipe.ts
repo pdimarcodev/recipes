@@ -1,8 +1,9 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, BaseEntity, ManyToMany, JoinColumn} from "typeorm";
-import { ObjectType, Field, Int } from "type-graphql";
+import { ObjectType, Field, Int, Ctx } from "type-graphql";
 
 import { Category } from './Category';
 import { User } from "./User";
+import { MyContext } from "../MyContext";
 
 
 @ObjectType()
@@ -32,4 +33,7 @@ export class Recipe extends BaseEntity {
 
     @ManyToMany(type => User, user => user.recipes)
     users: User[];
+
+ 
+    
 }
