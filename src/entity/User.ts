@@ -1,8 +1,9 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, BaseEntity, JoinTable} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, BaseEntity, JoinTable, OneToMany} from "typeorm";
 import { Field, ObjectType, Int} from 'type-graphql';
 
 import { Recipe } from "./Recipe";
-
+import { UserRecipe } from './UserRecipe';
+ 
 @ObjectType()
 @Entity()
 export class User extends BaseEntity{
@@ -23,9 +24,9 @@ export class User extends BaseEntity{
     @Column()
     password: string;
 
-    @ManyToMany(type => Recipe, recipes => recipes.users, {eager: true})
+    @OneToMany(type => UserRecipe, userRecipe => userRecipe.recipe, {eager: true})
     @JoinTable()
-    recipes: Recipe[];
+    recipeConnection: Promise<Recipe[]>;
 
 
 }

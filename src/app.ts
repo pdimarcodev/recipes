@@ -7,6 +7,7 @@ import { PingResolver } from './resolvers/ping';
 import { UserResolver } from './resolvers/userResolver';
 import { RecipeResolver } from "./resolvers/RecipeResolver";
 import { CategoryResolver } from "./resolvers/CategoryResolver";
+import { UserRecipeResolver } from "./resolvers/UserRecipeResolver";
 
 
 export async function startServer() {
@@ -18,7 +19,8 @@ export async function startServer() {
             PingResolver,
             UserResolver,
             RecipeResolver,
-            CategoryResolver
+            CategoryResolver,
+            UserRecipeResolver
         ]
         }),
         context: ({req, res}) => ({req, res})

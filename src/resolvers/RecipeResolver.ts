@@ -2,6 +2,7 @@ import { Resolver, Query, Mutation, Arg, InputType, Field, FieldResolver, Root, 
 import { Recipe } from "../entity/Recipe";
 import { isAuth } from "../isAuthMiddleware";
 import { Category } from "../entity/Category";
+import { Any } from "typeorm";
 
 
 
@@ -36,6 +37,21 @@ class RecipeUpdateInput {
     category?: () => string;
 }
 
+@InputType()
+class RecipeQueryInput {
+    @Field(() => String, {nullable: true})
+    name?: string;
+
+    @Field(() => String, {nullable: true})
+    description?: string;
+
+    @Field(() => String, {nullable: true})
+    ingredients?: string;
+
+    @Field(() => Int, {nullable: true})
+    category?: () => string;
+}
+
 
 @Resolver(of => Recipe)
 export class RecipeResolver {
@@ -44,11 +60,9 @@ export class RecipeResolver {
     @Mutation(() => Recipe)
     async createRecipe(
         @Arg("data", () => RecipeInput) data: RecipeInput
-    ) {
-          
+    ) {        
             await Recipe.insert(data);
-            return data;
-        
+            return data;       
     }
 
     // OK
@@ -62,11 +76,11 @@ export class RecipeResolver {
             
     }
 
-    // OK ** falta poder buscar por nombre de categoria, solo pasa id **
+    // OK ** categoria se busca por id **
     @Query(() => [Recipe], {nullable: true})
     //@UseMiddleware(isAuth)
     async getRecipes(
-        @Arg("fields", () => RecipeUpdateInput) fields: RecipeUpdateInput
+        @Arg("fields", () => RecipeQueryInput ) fields: RecipeQueryInput
         )
          {
             const qb = Recipe.createQueryBuilder('recipe')
@@ -77,7 +91,7 @@ export class RecipeResolver {
                 qb.andWhere('recipe.category = :category', { category: fields.category})
                 
             } else {
-            
+    
             qb.andWhere(key + ' like :' + key, {
                 [`${key}`] : '%' + `${value}` + '%'});
             }});
@@ -86,9 +100,6 @@ export class RecipeResolver {
         return result;
     };
 
-
-
-   
 
     @FieldResolver(() => Category)
     async category(@Root() recipe: Recipe) {

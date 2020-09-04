@@ -1,9 +1,10 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, BaseEntity, ManyToMany, JoinColumn} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, BaseEntity, ManyToMany, OneToMany, JoinColumn} from "typeorm";
 import { ObjectType, Field, Int, Ctx } from "type-graphql";
 
 import { Category } from './Category';
 import { User } from "./User";
 import { MyContext } from "../MyContext";
+import {UserRecipe} from "./UserRecipe";
 
 
 @ObjectType()
@@ -31,8 +32,8 @@ export class Recipe extends BaseEntity {
     @JoinColumn()
     category: Category;
 
-    @ManyToMany(type => User, user => user.recipes)
-    users: User[];
+    @OneToMany(() => UserRecipe, UserRecipe => UserRecipe.recipe)
+    userConnection: Promise<User[]>;
 
  
     

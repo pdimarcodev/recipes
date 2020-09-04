@@ -6,6 +6,7 @@ import { MyContext } from '../MyContext';
 import { createAccessToken } from '../auth';
 import { isAuth } from '../isAuthMiddleware';
 import { IsEmail } from 'class-validator';
+import { Recipe } from '../entity/Recipe';
 
 
 @ObjectType()
@@ -38,6 +39,8 @@ class UserUpdateInput {
     @Field(() => String, {nullable: true})
     password?: string;
 }
+
+
  
 @Resolver()
 export class UserResolver {
@@ -112,4 +115,7 @@ export class UserResolver {
     getMyUserId(@Ctx() {payload}: MyContext) {
         return `your user id is: ${payload!.userId}`;
     }
+
+
+
 } 
