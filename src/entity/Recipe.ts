@@ -3,7 +3,6 @@ import { ObjectType, Field, Int, Ctx } from "type-graphql";
 
 import { Category } from './Category';
 import { User } from "./User";
-import { MyContext } from "../MyContext";
 import {UserRecipe} from "./UserRecipe";
 
 

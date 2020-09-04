@@ -1,10 +1,8 @@
-import { Resolver, Query, Mutation, Arg, InputType, Field, FieldResolver, Root, UseMiddleware, Int } from "type-graphql";
+import { Resolver, Query, Mutation, Arg, InputType, Field, FieldResolver, Root, UseMiddleware, Int, Ctx } from "type-graphql";
+
 import { Recipe } from "../entity/Recipe";
 import { isAuth } from "../isAuthMiddleware";
 import { Category } from "../entity/Category";
-import { Any } from "typeorm";
-
-
 
 @InputType()
 class RecipeInput  {
@@ -76,9 +74,10 @@ export class RecipeResolver {
             
     }
 
-    // OK ** categoria se busca por id **
+    // OK ** se puede buscar por cualquier campo.
+    // categoria se busca por id **
     @Query(() => [Recipe], {nullable: true})
-    //@UseMiddleware(isAuth)
+    @UseMiddleware(isAuth)
     async getRecipes(
         @Arg("fields", () => RecipeQueryInput ) fields: RecipeQueryInput
         )
@@ -100,11 +99,17 @@ export class RecipeResolver {
         return result;
     };
 
+    @Query(() => Recipe, {nullable: true})
+    async getOneRecipe(
+        @Arg("name", () => String) name: string
+    ) {
+        return await Recipe.findOne({name});
+    }
+
 
     @FieldResolver(() => Category)
     async category(@Root() recipe: Recipe) {
     return await Category.findOne(recipe.category);
-  
-  }
+    }
          
 }

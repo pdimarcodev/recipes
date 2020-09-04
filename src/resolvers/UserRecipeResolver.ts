@@ -1,7 +1,4 @@
-import { Resolver, Query, Mutation, Arg, Field, InputType, Int, ObjectType, Ctx, UseMiddleware } from 'type-graphql';
-import { User } from '../entity/User';
-import { MyContext } from '../MyContext';
-import { isAuth } from '../isAuthMiddleware';
+import { Resolver, Mutation, Arg, Int } from 'type-graphql';
 
 import {UserRecipe} from '../entity/UserRecipe'; 
 
@@ -21,5 +18,6 @@ export class UserRecipeResolver {
             console.log(err);
         } 
     }
+
 }
 

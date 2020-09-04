@@ -1,0 +1,99 @@
+mutation CreateUser {
+  signUp ( data: {
+    name: "Lino"
+    email: "lino@gmail.com"
+    password: "lino"
+  })
+  {
+    id
+    name
+  }
+ 
+}
+
+mutation Login {
+  login(email: "lino@gmail.com", password: "lino"){
+    accessToken
+  }
+}
+
+query GetMyUserId {
+  getMyUserId
+  
+}
+
+mutation UserRecipe {
+  createRecipeUser(
+    recipeId: 2,
+    userId: 1
+  )
+}
+
+mutation CreateCat{
+  createCategory(data: {
+    name: "vwrduras"
+  }){
+    name
+  }
+}
+
+mutation CreateRecipe {
+  createRecipe(data: {
+    name: "tarta",
+    description: "una rica tarta",
+    ingredients: "acelga, queso"
+    category: 2
+    
+  }) {
+    name
+    description
+    ingredients
+    category {
+      name
+    }
+  }
+}
+
+mutation UpdateRecipe {
+  updateRecipe(id: 6,fields: {
+  ingredients: "cerdo"
+  category: 1
+  })
+}
+
+mutation UpdateCat {
+  updateCategory(id: 5,fields: {
+    
+  name: "sopas"
+  })
+}
+
+query GetRecipes{
+  getRecipes(fields: {
+
+		name: "puchero"
+    category: 1
+  })
+  
+  {
+  id
+	name
+    description
+    category {
+      name
+      
+    }
+}
+}
+
+query {
+  getCategories{
+    id
+    name
+  }
+}
+  
+
+query GetOneRecipe {
+  getOneRecipe(name: "puchero")
+}

@@ -31,13 +31,13 @@ export class CategoryResolver {
     }
 
     @Query(() => [Category], {nullable: true})
-    //@UseMiddleware(isAuth)
+    @UseMiddleware(isAuth)
     async getCategories() {
         return await Category.find();
     }
      
     @Query(() => Category, {nullable: true})
-    //@UseMiddleware(isAuth)
+    @UseMiddleware(isAuth)
     async getCategory(
         @Arg("name", () => String) name: string
         )
